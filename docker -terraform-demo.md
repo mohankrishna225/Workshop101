@@ -48,112 +48,118 @@ cd terraform/basics</p>
 <p>Create a Terraform script:</p>
 <p>vi <a href="http://main.tf">main.tf</a></p>
 <p><a href="http://main.tf">main.tf</a> contents:</p>
-<h1 id="download-the-latest-ghost-image">Download the latest Ghost image</h1>
-<p>resource “docker_image” “image_id” {<br>
-name = “ghost:latest”<br>
-}</p>
-<h1 id="start-the-container">Start the Container</h1>
-<p>resource “docker_container” “container_id” {<br>
-name  = “ghost_blog”<br>
-image = “${docker_image.image_id.latest}”<br>
-ports {<br>
-internal = “2368”<br>
-external = “80”<br>
-}<br>
-}</p>
+<pre><code># Download the latest Ghost image
+resource "docker_image" "image_id" {
+name = "ghost:latest"
+}
+
+# Start the Container
+resource "docker_container" "container_id" {
+  name  = "ghost_blog"
+  image = "${docker_image.image_id.latest}"
+  ports {
+    internal = "2368"
+    external = "80"
+  }
+}
+</code></pre>
 </li>
 <li>
 <p>Initialize Terraform:</p>
-<p>terraform init</p>
+<pre><code>terraform init
+</code></pre>
 </li>
 <li>
 <p>Validate the Terraform file:</p>
-<p>terraform validate</p>
+<pre><code>terraform validate
+</code></pre>
 </li>
 <li>
 <p>List providers in the folder:</p>
-<p>ls .terraform/plugins/linux_amd64/</p>
+<pre><code>ls .terraform/plugins/linux_amd64/
+```
+</code></pre>
 </li>
 <li>
 <p>List providers used in the configuration:</p>
-<p>terraform providers</p>
+<pre><code>terraform providers
+</code></pre>
 </li>
 <li>
 <p>Terraform Plan:</p>
-<p>terraform plan</p>
+<pre><code>terraform plan
+</code></pre>
 <p>Useful flags for  <code>plan</code>:<br>
 <code>-out=path</code>: Writes a plan file to the given path. This can be used as input to the “apply” command.<br>
 <code>-var 'foo=bar'</code>: Set a variable in the Terraform configuration. This flag can be set multiple times.</p>
 </li>
 <li>
 <p>Terraform Apply:</p>
-<p>terraform apply</p>
-<p>Useful flags for  <code>apply</code>:<br>
-<code>-auto-approve</code>: This skips interactive approval of plan before applying.<br>
-<code>-var 'foo=bar'</code>: This sets a variable in the Terraform configuration. It can be set multiple times.</p>
-<p>Confirm your apply by typing  <code>yes</code>. The apply will take a bit to complete.</p>
-</li>
-<li>
-<p>List the Docker images:</p>
+<pre><code>terraform apply
+</code></pre>
 </li>
 </ol>
-<pre><code>docker image ls
+<pre><code>
+ Useful flags for  `apply`:  
+ `-auto-approve`: This skips interactive approval of plan before applying.  
+ `-var 'foo=bar'`: This sets a variable in the Terraform configuration. It can be set multiple times.
+ 
+ Confirm your apply by typing  `yes`. The apply will take a bit to complete.
+ 
+10.  List the Docker images:
+ ```
+ docker image ls
+  ```
+11.  Terraform Show:
+  ```
+ terraform show
+  ```
+12.  Terraform Destroy:
+  ```
+ terraform destroy
+  ```
+ Useful flags for destroys:  
+ `-auto-approve`: Skip interactive approval of plan before applying.  
+ Confirm your destroy by typing  `yes`.
+ 
+13.  Re-list the Docker images:
+  ```
+ docker image ls
+  ```
+14.  Using a plan:
+  ```
+ terraform plan -out=tfplan
+  ```
+15.  Applying a plan:
+  ```
+ terraform apply tfplan
+  ```
+16.  Show the Docker Image resource:
+  ```
+ terraform show
+  ```
+17.  Destroy the resource once again:
+  ```
+ terraform destroy
+  ```
+18.  Open Ghost blog using Docker IP
 </code></pre>
-<ol start="11">
-<li>Terraform Show:</li>
-</ol>
-<pre><code>terraform show
-</code></pre>
-<ol start="12">
-<li>Terraform Destroy:</li>
-</ol>
-<pre><code>terraform destroy
-
-Useful flags for destroys:  
-`-auto-approve`: Skip interactive approval of plan before applying.  
-Confirm your destroy by typing  `yes`.
-</code></pre>
-<ol start="13">
-<li>Re-list the Docker images:</li>
-</ol>
-<pre><code>docker image ls
-</code></pre>
-<ol start="14">
-<li>Using a plan:</li>
-</ol>
-<pre><code>terraform plan -out=tfplan
-</code></pre>
-<ol start="15">
-<li>Applying a plan:</li>
-</ol>
-<pre><code>terraform apply tfplan
-</code></pre>
-<ol start="16">
-<li>Show the Docker Image resource:</li>
-</ol>
-<pre><code>terraform show
-</code></pre>
-<ol start="17">
-<li>Destroy the resource once again:</li>
-</ol>
-<pre><code>terraform destroy
-</code></pre>
-<ol start="18">
-<li>Open Ghost blog using Docker IP</li>
-</ol>
 </li>
 <li>
 <p><strong>Tainting and Updating Resources</strong></p>
 <ol>
 <li>
 <p>Tainting a resource:</p>
-<p>terraform taint docker_container.container_id</p>
+<pre><code>terraform taint docker_container.container_id
+</code></pre>
 <p>Check tainted resource which will be recreated using</p>
-<p>terraform plan</p>
+<pre><code>terraform plan
+</code></pre>
 </li>
 <li>
 <p>Untainting a resource:</p>
-<p>terraform untaint docker_container.container_id</p>
+<pre><code>terraform untaint docker_container.container_id
+</code></pre>
 </li>
 <li>
 <p>Let’s edit  <code>main.tf</code>  and change the image to  <code>ghost:alpine</code>.</p>
@@ -219,19 +225,23 @@ resource "docker_container" "container_id" {
 <ol>
 <li>
 <p>Redeploy the Ghost image and container:</p>
-<p>terraform apply</p>
+<pre><code>terraform apply
+</code></pre>
 </li>
 <li>
 <p>Show the Terraform resources:</p>
-<p>terraform show</p>
+<pre><code>terraform show
+</code></pre>
 </li>
 <li>
 <p>Start the Terraform console:</p>
-<p>terraform console</p>
+<pre><code>terraform console
+</code></pre>
 </li>
 <li>
 <p>Type the following in the console to get the container’s name:</p>
-<p>docker_container.container_id.name</p>
+<pre><code>docker_container.container_id.name
+</code></pre>
 </li>
 <li>
 <p>Type the following in the console to get the container’s IP:</p>
